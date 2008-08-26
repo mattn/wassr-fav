@@ -42,22 +42,22 @@ class MainPage(webapp.RequestHandler):
 
       page = urlfetch.fetch('http://wassr.jp/user/%s/received_favorites' % user)
       soup = BeautifulSoup(page.content)
-      #soup = BeautifulSoup(open("received_favorites").read())
 
       page_favs = soup.findAll('div', { 'class' : 'favorited_message'})
       r1 = re.compile(r'.*/([^/]*)/$')
       r2 = re.compile(r'(.*)\([^\)]+\) (.*)')
       for page_fav in page_favs:
-        author = r1.sub(lambda x: x.group(1), page_fav.find('form', { 'class' : 'followbutton favorited_user noteTxt' }).find('a')['href'])
-        #name = to_text(page_fav.find('p', { 'class' : 'favorited_user noteTxt' }).find('a'))
-        template_values['favs'].append({
-          'title' : to_text(page_fav.find('p', { 'class' : 'message description' }), True).strip(),
-          'link' : 'http://wassr.jp%s' % page_fav.find('a', { 'class' : 'MsgDateTime' })['href'],
-          'guid' : 'http://wassr.jp%s#%s' % (page_fav.find('a', { 'class' : 'MsgDateTime' })['href'], author),
-          'author' : author,
-          'icon' : 'http://wassr.jp/user/%s/profile_img.png.16' % author,
-          'pubDate'  : r2.sub(lambda x: '%sT%s+0900' % (x.group(1), x.group(2)), to_text(page_fav.find('a', { 'class' : 'MsgDateTime' })).strip()),
-        })
+        authors = page_fav.findAll('form', { 'class' : 'followbutton favorited_user noteTxt' })
+        for author in authors:
+          author = r1.sub(lambda x: x.group(1), author.find('a')['href'])
+          template_values['favs'].append({
+            'title' : to_text(page_fav.find('p', { 'class' : 'message description' }), True).strip(),
+            'link' : 'http://wassr.jp%s' % page_fav.find('a', { 'class' : 'MsgDateTime' })['href'],
+            'guid' : 'http://wassr.jp%s#%s' % (page_fav.find('a', { 'class' : 'MsgDateTime' })['href'], author),
+            'author' : author,
+            'icon' : 'http://wassr.jp/user/%s/profile_img.png.16' % author,
+            'pubDate'  : r2.sub(lambda x: '%sT%s+0900' % (x.group(1), x.group(2)), to_text(page_fav.find('a', { 'class' : 'MsgDateTime' })).strip()),
+          })
 
       self.response.headers['Content-Type'] = 'text/xml'
       path = os.path.join(os.path.dirname(__file__), 'wassr-fav.rss')
