@@ -5,7 +5,7 @@
     <link>{{ link|escape }}</link>
     <description>「{{ user|escape }}」がもらったイイネ</description>{% for fav in favs %}
     <item>
-        <title>「{{ fav.title|escape }}」のイイネ</title>
+        <title>「{{ fav.title }}」のイイネ</title>
         <link>{{ fav.link|escape }}</link>
         <author>{{ fav.author|escape }}</author>
         <icon>{{ fav.icon|escape }}</icon>
