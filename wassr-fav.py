@@ -31,7 +31,7 @@ class MainPage(webapp.RequestHandler):
 
   def get(self, user):
     template_values = {
-      'title' : 'wassr fav',
+      'title' : 'Wassr fav',
       'link' : 'http://wassr-fav.appspot.com/',
       'user' : '',
       'favs' : [],
