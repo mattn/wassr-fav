@@ -1,5 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0">
+<?xml version="1.0" encoding="UTF-8" ?>
+<?xml-stylesheet href="/static/wassr-fav-rss.css" type="text/css"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>{{ title|escape }}</title>
     <link>{{ link|escape }}</link>
@@ -13,7 +14,7 @@
         <icon>{{ fav.icon|escape }}</icon>
         <guid>{{ fav.guid|escape }}</guid>
         <pubDate>{{ fav.pubDate }}</pubDate>
-        <description>「<a href="{{ fav.link|escape }}">{{ fav.title }}</a>」に<a href="http://wassr.jp/user/{{ fav.author|escape }}">{{ fav.author|escape }}</a>がイイネを付けました</description>
+        <description>「{{ fav.title|escape }}」に{{ fav.author|escape }}がイイネを付けました</description>
     </item>{% endfor %}
   </channel>
 </rss>
