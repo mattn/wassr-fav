@@ -4,6 +4,8 @@
     <title>{{ title|escape }}</title>
     <link>{{ link|escape }}</link>
     <description>「{{ user|escape }}」がもらったイイネ</description>{% for fav in favs %}
+    <atom:link rel="self" href="http://wassr-fav.appspot.com/{{ user }}" type="application/rss+xml" />
+    <atom:link rel="hub" href="http://pubsubhubbub.appspot.com/"/>
     <item>
         <title>「{{ fav.title }}」のイイネ</title>
         <link>{{ fav.link|escape }}</link>
@@ -11,7 +13,7 @@
         <icon>{{ fav.icon|escape }}</icon>
         <guid>{{ fav.guid|escape }}</guid>
         <pubDate>{{ fav.pubDate }}</pubDate>
-        <description>「{{ fav.title|escape }}」に{{ fav.author|escape }}がイイネを付けました</description>
+        <description>「<a href="{{ fav.link|escape }}">{{ fav.title }}</a>」に<a href="http://wassr.jp/user/{{ fav.author|escape }}">{{ fav.author|escape }}</a>がイイネを付けました</description>
     </item>{% endfor %}
   </channel>
 </rss>

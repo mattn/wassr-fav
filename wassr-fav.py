@@ -11,12 +11,15 @@ from google.appengine.ext.webapp import template
 def to_text(soup, use_img_alt=False):
   ret = ""
   for e in soup.recursiveChildGenerator():
-    if isinstance(e,Tag) and e.name == 'img' and not "icn-balloon" in e['src']:
-      if use_img_alt:
-        ret += "(%s)" % e['alt']
-      else:
-        e['src'] = "http://wassr.jp%s" % e['src']
-        ret += unicode(e)
+    if isinstance(e,Tag):
+      if e.name == 'img' and not "icn-balloon" in e['src']:
+        if use_img_alt:
+          ret += "(%s)" % e['alt']
+        else:
+          e['src'] = "http://wassr.jp%s" % e['src']
+          ret += unicode(e)
+      elif e.name == 'br':
+        ret += ' '
     elif isinstance(e,unicode):
       ret += e.strip()
   ret = ret.replace('&nbsp;', ' ').replace('  ', '\n')
@@ -31,12 +34,13 @@ class MainPage(webapp.RequestHandler):
 
   def get(self, user):
     template_values = {
-      'title' : 'Wassr fav',
+      'title' : 'wassr fav',
       'link' : 'http://wassr-fav.appspot.com/',
       'user' : '',
       'favs' : [],
     }
     if user:
+      template_values['title'] = "wassr fav - %s" % user
       template_values['link'] += user
       template_values['user'] += user
 
@@ -47,7 +51,7 @@ class MainPage(webapp.RequestHandler):
       r1 = re.compile(r'.*/([^/]*)/$')
       r2 = re.compile(r'(.*)\([^\)]+\) (.*)')
       for page_fav in page_favs:
-        authors = page_fav.findAll('form', { 'class' : 'followbutton favorited_user noteTxt' })
+        authors = page_fav.findAll('div', { 'class' : 'favorited_user noteTxt' })
         for author in authors:
           author = r1.sub(lambda x: x.group(1), author.find('a')['href'])
           template_values['favs'].append({
